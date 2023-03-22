@@ -2,8 +2,7 @@ import React from "react";
 
 import Button from "../Button";
 
-import Toast from "../Toast";
-import ToastShelf from "../ToastShelf";
+import { usePopToast } from "../ToastProvider";
 
 import styles from "./ToastPlayground.module.css";
 
@@ -13,29 +12,16 @@ function ToastPlayground() {
   const [selectedVariant, setSelectedVariant] = React.useState(
     VARIANT_OPTIONS[0]
   );
-
   const [message, setMessage] = React.useState("");
-  const [toastQueue, setToastQueue] = React.useState([]);
 
-  const popToast = () => {
-    setToastQueue((prev) => {
-      return [
-        ...prev,
-        { id: crypto.randomUUID(), variant: selectedVariant, message },
-      ];
-    });
-  };
-
-  const resetForm = () => {
-    setMessage("");
-    setSelectedVariant(VARIANT_OPTIONS[0]);
-  };
+  const popToast = usePopToast();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    popToast();
-    resetForm();
+    popToast({ message, variant: selectedVariant });
+    setMessage("");
+    setSelectedVariant(VARIANT_OPTIONS[0]);
   };
 
   return (
@@ -44,21 +30,6 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-
-      <ToastShelf>
-        {toastQueue.map((toast) => (
-          <Toast
-            key={toast.id}
-            variant={toast.variant}
-            message={toast.message}
-            onDismiss={() => {
-              setToastQueue((prev) =>
-                prev.filter((item) => item.id !== toast.id)
-              );
-            }}
-          />
-        ))}
-      </ToastShelf>
 
       <form className={styles.controlsWrapper} onSubmit={handleSubmit}>
         <div className={styles.row}>
@@ -115,4 +86,4 @@ function ToastPlayground() {
   );
 }
 
-export default ToastPlayground;
+export default React.memo(ToastPlayground);

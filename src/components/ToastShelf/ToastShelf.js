@@ -1,18 +1,21 @@
 import React from "react";
 
-// import Toast from "../Toast";
+import Toast from "../Toast";
+import { useToastQueue } from "../ToastProvider";
 import styles from "./ToastShelf.module.css";
 
-function ToastShelf({ children }) {
-  const toasts = React.Children.map(children, (toast) => {
-    return (
-      <li className={styles.toastWrapper}>
-        {React.cloneElement(toast, toast.props)}
-      </li>
-    );
-  });
+function ToastShelf() {
+  const toasts = useToastQueue();
 
-  return <ol className={styles.wrapper}>{toasts}</ol>;
+  return (
+    <ol className={styles.wrapper}>
+      {toasts.map((toast) => (
+        <li key={toast.id} className={styles.toastWrapper}>
+          <Toast toast={toast} />
+        </li>
+      ))}
+    </ol>
+  );
 }
 
 export default ToastShelf;

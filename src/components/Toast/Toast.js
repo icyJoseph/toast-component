@@ -6,6 +6,7 @@ import {
   Info,
   X,
 } from "react-feather";
+import { useRemoveToast } from "../ToastProvider";
 
 import VisuallyHidden from "../VisuallyHidden";
 
@@ -18,9 +19,13 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-function Toast({ variant, message, onDismiss }) {
+function Toast({ toast }) {
+  const { message, variant } = toast;
+
   const Icon = ICONS_BY_VARIANT[variant];
   const variantClassName = styles[variant];
+
+  const dismissToast = useRemoveToast();
 
   return (
     <div className={`${styles.toast} ${variantClassName}`}>
@@ -30,7 +35,10 @@ function Toast({ variant, message, onDismiss }) {
 
       <p className={styles.content}>{message}</p>
 
-      <button className={styles.closeButton} onClick={onDismiss}>
+      <button
+        className={styles.closeButton}
+        onClick={() => dismissToast(toast)}
+      >
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
@@ -38,4 +46,4 @@ function Toast({ variant, message, onDismiss }) {
   );
 }
 
-export default Toast;
+export default React.memo(Toast);
