@@ -1,4 +1,5 @@
 import React from "react";
+import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 const ToastQueueContext = React.createContext();
 const PopToastContext = React.createContext();
@@ -16,6 +17,17 @@ export const ToastProvider = ({ children }) => {
   const removeToast = React.useCallback((toast) => {
     setToastQueue((prev) => prev.filter((item) => item !== toast));
   }, []);
+
+  const escapeKeySub = useEscapeKey();
+
+  React.useEffect(() => {
+    const unsubscribe = escapeKeySub(() => setToastQueue([]));
+
+    // or return unsubscribe
+    return () => {
+      unsubscribe();
+    };
+  }, [escapeKeySub]);
 
   return (
     <PopToastContext.Provider value={popToast}>

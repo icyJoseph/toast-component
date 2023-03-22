@@ -46,6 +46,12 @@ function ToastPlayground() {
               className={styles.messageInput}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.stopPropagation();
+                  e.target.blur();
+                }
+              }}
             />
           </div>
         </div>
