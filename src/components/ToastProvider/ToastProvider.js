@@ -20,6 +20,10 @@ export const ToastProvider = ({ children }) => {
 
   const escapeKeySub = useEscapeKey();
 
+  // by using a subscription callback instead of
+  // passing the callback to useEscapeKey
+  // it is possible to control the stability of the
+  // callback reference, from the caller side
   React.useEffect(() => {
     const unsubscribe = escapeKeySub(() => setToastQueue([]));
 
